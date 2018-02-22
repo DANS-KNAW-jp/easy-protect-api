@@ -15,10 +15,13 @@
  */
 package nl.knaw.dans.easy.papi
 
+import nl.knaw.dans.easy.papi.components.AuthenticationProvider
+
 import scala.util.{ Success, Try }
 
 class EasyProtectApiApp(wiring: ApplicationWiring) extends AutoCloseable {
 
+  def getAuthenticationProvider: AuthenticationProvider = wiring.authentication
 
   // The application's API here. This is what is used by driver or entry-point objects.
 

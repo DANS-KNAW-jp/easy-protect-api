@@ -15,6 +15,7 @@
  */
 package nl.knaw.dans.easy.papi
 
+import nl.knaw.dans.easy.papi.components.LdapAuthentication
 import nl.knaw.dans.lib.logging.DebugEnhancedLogging
 
 /**
@@ -23,7 +24,10 @@ import nl.knaw.dans.lib.logging.DebugEnhancedLogging
  * @param configuration the application configuration
  */
 class ApplicationWiring(configuration: Configuration) extends DebugEnhancedLogging
-// Mix in components
-{
-  // Configure components with configuration settings.
+  with LdapAuthentication {
+
+  override val authentication: Authentication = new Authentication {
+    override val ldapUsersEntry: String = configuration.properties.getString("ldap.users-entry")
+    override val ldapProviderUrl: String = configuration.properties.getString("ldap.provider.url")
+  }
 }

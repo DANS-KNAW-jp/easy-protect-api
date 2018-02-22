@@ -1,6 +1,6 @@
-package nl.knaw.dans.easy.session.components
+package nl.knaw.dans.easy.papi.components
 
-import nl.knaw.dans.easy.session.components.authstrategies.UserPasswordStrategy
+import nl.knaw.dans.easy.papi.components.authstrategies.UserPasswordStrategy
 import org.scalatra.ScalatraBase
 import org.scalatra.auth.{ ScentryConfig, ScentrySupport }
 

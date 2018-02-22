@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.knaw.dans.easy.session
+package nl.knaw.dans.easy.papi
 
-import nl.knaw.dans.easy.session.components.{ AuthenticationProvider, AuthenticationSupport }
+import nl.knaw.dans.easy.papi.components.{ AuthenticationProvider, AuthenticationSupport }
 import nl.knaw.dans.lib.logging.DebugEnhancedLogging
 import org.scalatra._
 
-class LoginServlet(app: EasySessionApp) extends ScalatraServlet
+class LoginServlet(app: EasyProtectApiApp) extends ScalatraServlet
   with AuthenticationSupport
   with DebugEnhancedLogging {
 

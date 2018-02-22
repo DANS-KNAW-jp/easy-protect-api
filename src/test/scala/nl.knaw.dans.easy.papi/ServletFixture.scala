@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.knaw.dans.easy.session
+package nl.knaw.dans.easy.papi
 
 import org.eclipse.jetty.server.nio.SelectChannelConnector
 import org.scalatra.test.EmbeddedJettyContainer

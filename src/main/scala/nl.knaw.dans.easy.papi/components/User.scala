@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.knaw.dans.easy.session.components
+package nl.knaw.dans.easy.papi.components
 
 case class User(id: String,
                 groups: Seq[String] = Seq.empty,

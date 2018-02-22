@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.knaw.dans.easy.session.components
+package nl.knaw.dans.easy.papi.components
 
 import java.util
 import javax.naming.directory.{ BasicAttributes, SearchControls, SearchResult }
 import javax.naming.ldap.LdapContext
 import javax.naming.{ AuthenticationException, NamingEnumeration }
 
+import nl.knaw.dans.easy.papi.TestSupportFixture
 import nl.knaw.dans.easy.session._
-import nl.knaw.dans.easy.session.components.LdapMocker._
+import nl.knaw.dans.easy.papi.components.LdapMocker._
 import org.scalamock.scalatest.MockFactory
 
 import scala.util.{ Failure, Success }

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.knaw.dans.easy.papi
+package nl.knaw.dans.easy.session
 
 import javax.servlet.ServletContext
 
+import nl.knaw.dans.easy.papi.{ EasyProtectApiApp, LoginServlet, ProtectedServlet }
 import nl.knaw.dans.lib.logging.DebugEnhancedLogging
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.ServletContextHandler
@@ -35,13 +36,15 @@ class EasyProtectApiService(serverPort: Int, app: EasyProtectApiApp) extends Deb
     override def probeForCycleClass(classLoader: ClassLoader): (String, LifeCycle) = {
       ("anonymous", new LifeCycle {
         override def init(context: ServletContext): Unit = {
-          context.mount(new EasyProtectApiServlet(app), "/")
+          context.mount(new ProtectedServlet(app), "/*")
+          context.mount(new LoginServlet(app), "/sessions/*")
         }
       })
     }
   })
   server.setHandler(context)
   info(s"HTTP port is ${ serverPort }")
+  info(s"HTTP port is $serverPort")
 
   def start(): Try[Unit] = Try {
     info("Starting service...")

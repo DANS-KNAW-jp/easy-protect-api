@@ -17,6 +17,7 @@ package nl.knaw.dans.easy.papi
 
 import java.nio.file.Paths
 
+import nl.knaw.dans.easy.session.EasyProtectApiService
 import nl.knaw.dans.lib.error._
 import nl.knaw.dans.lib.logging.DebugEnhancedLogging
 import resource._

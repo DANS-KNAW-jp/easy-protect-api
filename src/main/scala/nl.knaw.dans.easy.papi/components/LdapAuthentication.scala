@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.knaw.dans.easy.session.components
+package nl.knaw.dans.easy.papi.components
 
 import java.util
 import javax.naming.directory.{ Attribute, SearchControls, SearchResult }

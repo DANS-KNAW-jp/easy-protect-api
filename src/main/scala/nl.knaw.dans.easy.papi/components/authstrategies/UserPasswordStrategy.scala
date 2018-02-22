@@ -1,8 +1,8 @@
-package nl.knaw.dans.easy.session.components.authstrategies
+package nl.knaw.dans.easy.papi.components.authstrategies
 
 import javax.servlet.http.{ HttpServletRequest, HttpServletResponse }
 
-import nl.knaw.dans.easy.session.components.{ AuthenticationProvider, User }
+import nl.knaw.dans.easy.papi.components.{ AuthenticationProvider, User }
 import nl.knaw.dans.lib.logging.DebugEnhancedLogging
 import org.scalatra.ScalatraBase
 import org.scalatra.auth.ScentryStrategy

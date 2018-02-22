@@ -1,4 +1,4 @@
-package nl.knaw.dans.easy.session.components
+package nl.knaw.dans.easy.papi.components
 
 import scala.util.Try
 

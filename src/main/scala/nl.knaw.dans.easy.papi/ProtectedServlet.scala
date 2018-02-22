@@ -15,15 +15,22 @@
  */
 package nl.knaw.dans.easy.papi
 
+import nl.knaw.dans.easy.papi.components.{ AuthenticationProvider, AuthenticationSupport }
 import nl.knaw.dans.lib.logging.DebugEnhancedLogging
 import org.scalatra._
 
-class EasyProtectApiServlet(app: EasyProtectApiApp) extends ScalatraServlet with DebugEnhancedLogging {
-  import app._
-  import logger._
+class ProtectedServlet(app: EasyProtectApiApp) extends ScalatraServlet
+  with AuthenticationSupport
+  with DebugEnhancedLogging {
+
+  before() {
+    requireLogin()
+  }
 
   get("/") {
     contentType = "text/plain"
-    Ok("EASY Protect Api Service running...")
+    Ok("You are logged in")
   }
+
+  override def getAuthenticationProvider: AuthenticationProvider = app.getAuthenticationProvider
 }

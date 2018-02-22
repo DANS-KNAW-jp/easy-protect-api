@@ -1,4 +1,4 @@
-package nl.knaw.dans.easy.session
+package nl.knaw.dans.easy.papi
 
 import org.apache.commons.configuration.PropertiesConfiguration
 import org.eclipse.jetty.http.HttpStatus._
@@ -11,7 +11,7 @@ class LoginServletSpec extends TestSupportFixture with ServletFixture with Scala
     addProperty("ldap.provider.url", "ldap://hostDoesNotExist")
   }
 
-  def app: EasySessionApp = new EasySessionApp(new ApplicationWiring(new Configuration("", configuration)) {
+  def app: EasyProtectApiApp = new EasyProtectApiApp(new ApplicationWiring(new Configuration("", configuration)) {
     //override val authentication: AuthenticationProvider = mock[AuthenticationProvider]
   })
 
