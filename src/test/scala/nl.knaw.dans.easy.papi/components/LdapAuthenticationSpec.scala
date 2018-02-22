@@ -16,12 +16,11 @@
 package nl.knaw.dans.easy.papi.components
 
 import java.util
-import javax.naming.directory.{ BasicAttributes, SearchControls, SearchResult }
+import javax.naming.AuthenticationException
+import javax.naming.directory.BasicAttributes
 import javax.naming.ldap.LdapContext
-import javax.naming.{ AuthenticationException, NamingEnumeration }
 
 import nl.knaw.dans.easy.papi.TestSupportFixture
-import nl.knaw.dans.easy.session._
 import nl.knaw.dans.easy.papi.components.LdapMocker._
 import org.scalamock.scalatest.MockFactory
 

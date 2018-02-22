@@ -75,7 +75,7 @@ class ServletsSpec extends TestSupportFixture with ServletFixture with ScalatraS
     ) {
       status shouldBe MOVED_TEMPORARILY_302
       body shouldBe ""
-      header("Location") should startWith (s"$baseUrl/;jsessionid=")
+      header("Location") should startWith(s"$baseUrl/;jsessionid=")
       header("Set-Cookie") should include("JSESSIONID=")
       header("Set-Cookie") should include("Path=/")
       header("Set-Cookie") should include(";")
