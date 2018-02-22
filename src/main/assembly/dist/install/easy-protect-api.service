@@ -1,0 +1,14 @@
+[Unit]
+Description=EASY Protect Api Service
+
+[Service]
+ExecStart=/bin/java \
+   -Dlogback.configurationFile=/etc/opt/dans.knaw.nl/easy-protect-api/logback-service.xml \
+   -Dapp.home=/opt/dans.knaw.nl/easy-protect-api \
+   -jar /opt/dans.knaw.nl/easy-protect-api/bin/easy-protect-api.jar run-service
+
+User=easy-protect-api
+Group=easy-protect-api
+
+[Install]
+WantedBy=multi-user.target
