@@ -27,14 +27,20 @@ class ProtectedServlet(app: EasyProtectApiApp) extends ScalatraServlet
     requireLogin()
   }
 
-  get("/x") {
+  get("/") {
     contentType = "text/plain"
     Ok(s"You fetched protected $params")
   }
 
-  get("/y") {
+  get("/x") {
     contentType = "text/plain"
-    Ok(s"You fetched protected $params")
+    Ok(s"You fetched protected X $params")
+  }
+
+  // should be a post because the state changes !!!
+  get("/logout") {
+    scentry.logout()
+    redirect("/")
   }
 
   override def getAuthenticationProvider: AuthenticationProvider = app.getAuthenticationProvider

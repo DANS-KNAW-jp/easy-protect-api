@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.knaw.dans.easy.session
+package nl.knaw.dans.easy.papi
 
 import javax.servlet.ServletContext
 
-import nl.knaw.dans.easy.papi.{ EasyProtectApiApp, LoginServlet, ProtectedServlet }
 import nl.knaw.dans.lib.logging.DebugEnhancedLogging
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.ServletContextHandler
@@ -31,7 +30,7 @@ class EasyProtectApiService(serverPort: Int, app: EasyProtectApiApp) extends Deb
   import logger._
 
   private val server = new Server(serverPort)
-  private val context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS)
+  private val context = new ServletContextHandler(ServletContextHandler.SESSIONS)
   context.addEventListener(new ScalatraListener() {
     override def probeForCycleClass(classLoader: ClassLoader): (String, LifeCycle) = {
       ("anonymous", new LifeCycle {
