@@ -82,7 +82,7 @@ class ServletsSpec extends TestSupportFixture with ServletFixture with ScalatraS
       header("Content-Type") shouldBe "text/html;charset=UTF-8"
       header("Expires") shouldBe "Thu, 01 Jan 1970 00:00:00 GMT"
 
-      // TODO expecting "You executed a protected action" with a manul test
+      // TODO expecting "You executed a protected action" with a manual test
     }
   }
 

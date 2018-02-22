@@ -32,18 +32,18 @@
   tasks:
   - name: Installing package
     yum:
-      name: dans.knaw.nl-easy-session
+      name: dans.knaw.nl-easy-protect-api
       state: latest
 
-    - name: Install Ldap
-      include_role:
-        name: "dans.easy-ldap-dir"
+  - name: Install Ldap
+    include_role:
+      name: "dans.easy-ldap-dir"
 
-    - name: Install easy users
-      include_role:
-        name: "dans.easy-test-users"
+  - name: Install easy users
+    include_role:
+      name: "dans.easy-test-users"
 
   - service:
-      name: easy-session
+      name: easy-protect-api
       state: started
       enabled: yes
