@@ -1,11 +1,11 @@
 # Wrapping up
 
-## Our use case: 
+## Our use case
 
 Prevent the need to re-enter user-name and password between for example
 fetching the metadata of draft dataset and submitting again.
 
-## Approach:
+## Approach
 
 Our JWT tokens contain only identification and are stored in cookies.
 Reissue a token after each server interaction and expire after 15 minutes, [however](#2010).
@@ -112,7 +112,8 @@ more on https://www.owasp.org/index.php/Session_Management_Cheat_Sheet
   * You cannot invalidate individual JWT tokens: we won't be able to analyse and block an attack with short-lived (15 minutes or so) tokens. If really needed verify the user and its state in ldap.
   * Data goes stale: our only data is identification, same as previous point
   * Implementations are less battle-tested or non-existent: 
-  
+
+* other bits and pieces from the article
   * Local Storage: not vulnerable to CSRF attacks ... requires JavaScript ... potentially worse class of vulnerabilities.
   * stateless JWT tokens, where all the data is encoded directly into the token
   * sessions - can be invalidated by the server ... individual stateless JWT tokens cannot be invalidated
