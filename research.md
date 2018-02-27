@@ -1,13 +1,43 @@
-# breaking down the problem
+# Wrapping up
 
-## Create a token
+## Our use case: 
+
+Prevent the need to re-enter user-name and password between for example
+fetching the metadata of draft dataset and submitting again.
+
+## Approach:
+
+Our JWT tokens contain only identification and are stored in cookies.
+Reissue a token after each server interaction and expire after 15 minutes, [however](#2010).
+N.B: form-data should not get lost when time to submit exceeds expiration.
+Low priority (if at all) for additional server-side token validation:
+use ldap to verify the user found in the token,
+in case it got blocked since issuing the token.
+
+## Not yet discussed
+
+* Choice between scala's [jwt-core] (issues and PRs show more activity) and [java-jwt]
+* How to create/configure the secret needed for the SWT
+* [nonce] and [digest authentication]
+
+[jwt-core]: http://pauldijou.fr/jwt-scala/samples/jwt-core/
+[java-jwt]: https://github.com/auth0/java-jwt
+[nonce]: https://en.wikipedia.org/wiki/Cryptographic_nonce
+[digest authentication]: https://en.wikipedia.org/wiki/Digest_access_authentication
+
+# Research Notes
+
+
+## Breaking down the problem
+
+### Create a token
 
 * server side?
 * signed?
 *
 *
 
-## Keep track of the token client side
+### Keep track of the token client side
 
 * cookies
 * local storage
@@ -16,7 +46,7 @@
 *
 *
 
-## Exchange tokens between client/server
+### Exchange tokens between client/server
 
 https only, just give an error in case of http, don't redirect
 
@@ -32,15 +62,15 @@ https only, just give an error in case of http, don't redirect
 *
 *
 
-## Verify the token server side
+### Verify the token server side
 
 *
 *
 *
 
-# articles
+## articles
 
-## https://en.wikipedia.org/wiki/Web_storage
+### https://en.wikipedia.org/wiki/Web_storage
 
 * exclusively available for client side scripting (not by servers), greater storage capacity than cookies
   * local : per origin (the combination of protocol, hostname, and port number) 
@@ -50,7 +80,7 @@ https only, just give an error in case of http, don't redirect
   
 Cookie limits: 4kb, 15-20 [stackoverflow](https://stackoverflow.com/questions/17882647/can-user-disable-html5-sessionstorage)
 
-## [a white-paper](http://technicalinfo.net/papers/WebBasedSessionManagement.html) discusses pro's and cons of
+### [a white-paper](http://technicalinfo.net/papers/WebBasedSessionManagement.html) discusses pro's and cons of
 
 * URL-based session-id’s
 * Hidden post fields (requires more skills for hijacking, accidental support of get breaks this, more complex pages)
@@ -58,48 +88,46 @@ Cookie limits: 4kb, 15-20 [stackoverflow](https://stackoverflow.com/questions/17
 
 more on https://www.owasp.org/index.php/Session_Management_Cheat_Sheet
 
-## critical articles
+### critical articles
 
-### https://hueniverse.com/oauth-bearer-tokens-are-a-terrible-idea-1a300fd12e13
+#### <a name="2010"/>2010 https://hueniverse.com/oauth-bearer-tokens-are-a-terrible-idea-1a300fd12e13
 
 * cookie or cash: owned by whoever has it in its pocket, source unsure
+* bearer tokens rely solely on SSL/TLS for its security.
+* SSL/TLS is Harder than You Think
+  * man-in-the-middle: If anyone can get between your client and the server, they can capture the token and use it at will.
+  * The server has no way of enforcing certificate verification
+* Signatures ensure that mistakes don’t compromise the token... At most, an attacker can use the captured request once
 * “Bearer tokens have the same security properties of cookie authentication, as both use plaintext strings without secrets or signatures. However, ...”
 * separate the ‘how to get a token’ part from the ‘how to use a token’ part
 
-### http://cryto.net/~joepie91/blog/2016/06/13/stop-using-jwt-for-sessions/
+#### <a name="2016"/>2016 http://cryto.net/~joepie91/blog/2016/06/13/stop-using-jwt-for-sessions/
 
-* The correct comparisons are "sessions vs. JWT" and "cookies vs. Local Storage".
-* signing in no way unique to JWT
-* any kind of session implementation will be interceptable if you don't use TLS, including JWT
-* Local Storage: not vulnerable to CSRF attacks ... requires JavaScript ... potentially worse class of vulnerabilities.
-* stateless JWT tokens, where all the data is encoded directly into the token
-* sessions - can be invalidated by the server ... individual stateless JWT tokens cannot be invalidated
+* (invalid) claims of JWT
+  *
 
-* JWT usecases: single-use authorization token
-  * The tokens are short-lived.
-  * The token is only expected to be used once.
-  * The application server still uses sessions.
-* combine sessions and JWT tokens ... Just don't use JWT for persistent, long-lived data.
+* Drawbacks
+  * take up space: we only need identification
+  * less secure: in a cookie, it's no different from any other session identifier, elsewhere, you are now vulnerable to a new class of attacks
+  * You cannot invalidate individual JWT tokens: we won't be able to analyse and block an attack with short-lived (15 minutes or so) tokens. If really needed verify the user and its state in ldap.
+  * Data goes stale: our only data is identification, same as previous point
+  * Implementations are less battle-tested or non-existent: 
+  
+  * Local Storage: not vulnerable to CSRF attacks ... requires JavaScript ... potentially worse class of vulnerabilities.
+  * stateless JWT tokens, where all the data is encoded directly into the token
+  * sessions - can be invalidated by the server ... individual stateless JWT tokens cannot be invalidated
 
-* [Footnote: microservice architectures](http://cryto.net/%7Ejoepie91/blog/2016/06/19/stop-using-jwt-for-sessions-part-2-why-your-solution-doesnt-work/)
-  * Unlike Cookies, any javascript on the page can steal from local storage
-  * ... reimplementing sessions ...
-  * For a stateless service, there's no session at all, so you simply have the application server hand out short-lived, single-use tokens for each individual authorized operation.
-
-### conclusion
-
-To prevent authentication between fetching a draft dataset end submitting again, uses sessions.
-The other servlet can still remain stateless.
-But why does the example still store something in a cookie?
+* JWT usecases
+  * Hello Server B, Server A told me that I could <claim goes here>, and here's the (cryptographic) proof.
 
 
-## https://stormpath.com/blog/secure-your-rest-api-right-way
+### https://stormpath.com/blog/secure-your-rest-api-right-way
 
 * I'm getting confused: is OAuth a protocol or delegation like using the institution account for the current easy-web-ui?
 *
 *
 
-## scentry = scalatra + sentry
+### scentry = scalatra + sentry
 
 *  https://cartalyst.com/manual/sentry/2.1
   * framework agnostic
@@ -109,20 +137,20 @@ But why does the example still store something in a cookie?
    
 
 
-# sample code / libraries
+## sample code / libraries
 
 http://scalatra.org/guides/2.6/http/authentication.html
 https://www.eclipse.org/jetty/documentation/9.3.x/session-management.html
 
 
-## committed code
+### committed code
 
 * mimics a subset of https://github.com/scalatra/scalatra-website-examples/tree/master/2.6/http/authentication-demo
 * not yet: remember-me / expiration
 * applies sessions, so service not stateless (but it is just one servlet that takes care of the session)
 * learnt to apply scentry strategies
 
-## org.scalatra.BasicAuthStrategy [class](https://github.com/scalatra/scalatra/blob/2.3.x/auth/src/main/scala/org/scalatra/auth/strategy/BasicAuthStrategy.scala)
+### org.scalatra.BasicAuthStrategy [class](https://github.com/scalatra/scalatra/blob/2.3.x/auth/src/main/scala/org/scalatra/auth/strategy/BasicAuthStrategy.scala)
 
 * AUTHORIZATION_KEYS = List("Authorization", "HTTP_AUTHORIZATION", "X-HTTP_AUTHORIZATION", "X_HTTP_AUTHORIZATION")
 * these KEYS are headers of the request
@@ -130,14 +158,14 @@ https://www.eclipse.org/jetty/documentation/9.3.x/session-management.html
 * refers to https://gist.github.com/casualjim/732347
    (also applies from/to-session as in the example used for the committed example, which handle session cookies)
 
-## http://lollyrock.com/articles/scalatra-bearer-authentication/
+### http://lollyrock.com/articles/scalatra-bearer-authentication/
 
 * authentication service issuing tokens
 * other services ask the authentication service to verify the token
 * token stored in (session) cookie ?
 * comparing with BasicAuthStrategy: "basic" is replaced with bearer
 
-## react/redux https://www.youtube.com/watch?v=tIajENrOJ0o
+### react/redux https://www.youtube.com/watch?v=tIajENrOJ0o
 
 redux store = local storage 
 
@@ -156,8 +184,7 @@ redux store = local storage
   * at about 4:00 starts the equivalent of the before/strategy of committed code
   * at 8:25 json web-tokens are introduced
   * at 10:30 [jwt.verfy](https://github.com/Remchi/reddice/blob/5bcde44a753fdea31be552a52affff099e3d268b/server/middlewares/authenticate.js#L14)? Where went the configured secret in earlier sessions?
-  scala: [jwt-core](http://pauldijou.fr/jwt-scala/samples/jwt-core/)
-  where to get a private key
+
   [Authenticate express middleware](https://github.com/Remchi/reddice/commit/5bcde44a753fdea31be552a52affff099e3d268b)
 20) Protect Client-Side Routes with Higher Order Component
   listened until 6:50 is equivalent of the implemented before
