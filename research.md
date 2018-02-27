@@ -47,6 +47,8 @@ https only, just give an error in case of http, don't redirect
   * session : per-origin-per-window-or-tab
 * [where stored](https://stackoverflow.com/questions/8634058/where-the-sessionstorage-and-localstorage-stored)
   so on the file system
+  
+Cookie limits: 4kb, 15-20 [stackoverflow](https://stackoverflow.com/questions/17882647/can-user-disable-html5-sessionstorage)
 
 ## [a white-paper](http://technicalinfo.net/papers/WebBasedSessionManagement.html) discusses pro's and cons of
 
@@ -56,12 +58,40 @@ https only, just give an error in case of http, don't redirect
 
 more on https://www.owasp.org/index.php/Session_Management_Cheat_Sheet
 
+## critical articles
 
-## https://hueniverse.com/oauth-bearer-tokens-are-a-terrible-idea-1a300fd12e13
+### https://hueniverse.com/oauth-bearer-tokens-are-a-terrible-idea-1a300fd12e13
 
 * cookie or cash: owned by whoever has it in its pocket, source unsure
 * “Bearer tokens have the same security properties of cookie authentication, as both use plaintext strings without secrets or signatures. However, ...”
 * separate the ‘how to get a token’ part from the ‘how to use a token’ part
+
+### http://cryto.net/~joepie91/blog/2016/06/13/stop-using-jwt-for-sessions/
+
+* The correct comparisons are "sessions vs. JWT" and "cookies vs. Local Storage".
+* signing in no way unique to JWT
+* any kind of session implementation will be interceptable if you don't use TLS, including JWT
+* Local Storage: not vulnerable to CSRF attacks ... requires JavaScript ... potentially worse class of vulnerabilities.
+* stateless JWT tokens, where all the data is encoded directly into the token
+* sessions - can be invalidated by the server ... individual stateless JWT tokens cannot be invalidated
+
+* JWT usecases: single-use authorization token
+  * The tokens are short-lived.
+  * The token is only expected to be used once.
+  * The application server still uses sessions.
+* combine sessions and JWT tokens ... Just don't use JWT for persistent, long-lived data.
+
+* [Footnote: microservice architectures](http://cryto.net/%7Ejoepie91/blog/2016/06/19/stop-using-jwt-for-sessions-part-2-why-your-solution-doesnt-work/)
+  * Unlike Cookies, any javascript on the page can steal from local storage
+  * ... reimplementing sessions ...
+  * For a stateless service, there's no session at all, so you simply have the application server hand out short-lived, single-use tokens for each individual authorized operation.
+
+### conclusion
+
+To prevent authentication between fetching a draft dataset end submitting again, uses sessions.
+The other servlet can still remain stateless.
+But why does the example still store something in a cookie?
+
 
 ## https://stormpath.com/blog/secure-your-rest-api-right-way
 
@@ -125,7 +155,9 @@ redux store = local storage
 19) Authentication: Verify JWT on Server with Express Middleware
   * at about 4:00 starts the equivalent of the before/strategy of committed code
   * at 8:25 json web-tokens are introduced
-  * at 10:30 what is scalatra's equivalent of [jwt.verfy](https://github.com/Remchi/reddice/blob/5bcde44a753fdea31be552a52affff099e3d268b/server/middlewares/authenticate.js#L14)? Where went the configured secret in earlier sessions?
+  * at 10:30 [jwt.verfy](https://github.com/Remchi/reddice/blob/5bcde44a753fdea31be552a52affff099e3d268b/server/middlewares/authenticate.js#L14)? Where went the configured secret in earlier sessions?
+  scala: [jwt-core](http://pauldijou.fr/jwt-scala/samples/jwt-core/)
+  where to get a private key
   [Authenticate express middleware](https://github.com/Remchi/reddice/commit/5bcde44a753fdea31be552a52affff099e3d268b)
 20) Protect Client-Side Routes with Higher Order Component
   listened until 6:50 is equivalent of the implemented before
